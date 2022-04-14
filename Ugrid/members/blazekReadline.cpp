@@ -1,9 +1,11 @@
 #include <fstream>
 #include <string>
+#include "blazekReadline.h"
 using namespace std;
+namespace UGN = UgridNamespace;
 
 // From Blazek
-string ReadLine(ifstream& stream)
+string UGN::ReadLine(ifstream& stream)
 {
     string str;
     string::size_type ic;

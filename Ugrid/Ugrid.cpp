@@ -4,6 +4,7 @@
 #include <sstream>
 #include <stdio.h>
 using namespace std;
+using namespace UgridNamespace;
 
 void Ugrid::read(ifstream& myFileStream)
 {

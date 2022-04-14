@@ -4,20 +4,21 @@
 #include "Node.h"
 #include "blazekReadline.h"
 using namespace std;
+namespace UGN = UgridNamespace;
 
-void Node::read(ifstream& myFileStream)
+void UGN::Node::read(ifstream& myFileStream)
 {
     string line;
-    line = ReadLine(myFileStream);
+    line = UGN::ReadLine(myFileStream);
     stringstream(line) >> x >> y >> z;
 }
 
-void Node::print()
+void UGN::Node::print()
 {
     printf("%f %f %f\n", x, y, z);
 }
 
-void Node::printVtk(FILE* fid)
+void UGN::Node::printVtk(FILE* fid)
 {
     fprintf(fid,"%f %f %f\n", x, y, z);
 }

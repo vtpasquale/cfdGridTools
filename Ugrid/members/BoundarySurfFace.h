@@ -2,11 +2,14 @@
 #include <fstream>
 using namespace std;
 
-class BoundarySurfFace
-{
-public:
-	int n;
-	void read(ifstream&);
-	void print();
-};
+namespace UgridNamespace{
 
+	class BoundarySurfFace
+	{
+	public:
+		int n;
+		void read(ifstream&);
+		void print();
+	};
+	
+}

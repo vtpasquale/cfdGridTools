@@ -3,15 +3,16 @@
 #include <fstream>
 #include <sstream>
 using namespace std;
+namespace UGN = UgridNamespace;
 
-void BoundarySurfFace::read(ifstream& myFileStream)
+void UGN::BoundarySurfFace::read(ifstream& myFileStream)
 {
     string line;
-    line = ReadLine(myFileStream);
+    line = UGN::ReadLine(myFileStream);
     stringstream(line) >> n;
 }
 
-void BoundarySurfFace::print()
+void UGN::BoundarySurfFace::print()
 {
     printf("%d\n", n);
 }

@@ -10,6 +10,7 @@
 #include "members/blazekReadline.h"
 #include <fstream>
 using namespace std;
+using namespace UgridNamespace;
 
 class Ugrid
 {
