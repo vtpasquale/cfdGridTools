@@ -26,6 +26,11 @@
 *.a
 *.lib
 
+# Mesh files
+.mesh
+.meshb
+.vtk
+
 # Executables
 *.exe
 *.out
