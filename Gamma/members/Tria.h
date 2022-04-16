@@ -7,6 +7,7 @@ namespace GammaNamespace{
 	{
 	public:
 		int n[3];
+		int ref;
  		void print();
 		void printVtk(FILE*);
 	};

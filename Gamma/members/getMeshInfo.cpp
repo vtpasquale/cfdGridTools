@@ -46,7 +46,7 @@ void Gamma::getMeshInfo(const char* fileName)
   }
 
   if ( InpMsh != 0 && subsol == NULL ) {
-    printf("Mesh informations :\n");
+    printf("Mesh information :\n");
    /* Get number of entities*/
        
     NmbVer   = GmfStatKwd(InpMsh, GmfVertices);
@@ -266,7 +266,7 @@ void Gamma::getMeshInfo(const char* fileName)
   }
 
   if (InpSol!= 0 ) {
-    printf("Solution informations :\n");
+    printf("Solution information :\n");
     if ( GmfStatKwd(InpSol, GmfTime) ) {
       GmfGotoKwd(InpSol, GmfTime);
       if ( FilVer == GmfFloat ) {	// read 32 bits float

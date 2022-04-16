@@ -46,3 +46,4 @@ clean:
         rm -rvf ./libMeshb/*.o
         rm -rvf ./members/*.o
         rm -rvf *.o
+        rm =rvf mshinfo mshinfop transmesh

@@ -13,8 +13,10 @@ BINS := $(SRCS:%.cpp=%)
 all: ${OBJ}
         $(MAKE) -C Ugrid/ '.RECIPEPREFIX+='
         $(MAKE) -C Plt/ '.RECIPEPREFIX+='
+        $(MAKE) -C Gamma/ '.RECIPEPREFIX+='
         ${CPP} -o convertUgridToVtk convertUgridToVtk.o Ugrid/Ugrid.o Ugrid/members/*.o
         ${CPP} -o convertPltToVtk convertPltToVtk.o Plt/Plt.o Plt/members/*.o
+        ${CPP} -o convertGammaToVtk convertGammaToVtk.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
 
 OBJ: ${SRCS}
         ${CPP} -c $<
@@ -22,6 +24,8 @@ OBJ: ${SRCS}
 clean:
         $(MAKE) -C Ugrid/ 'clean' '.RECIPEPREFIX+='
         $(MAKE) -C Plt/ 'clean' '.RECIPEPREFIX+='
+        $(MAKE) -C Gamma/ 'clean' '.RECIPEPREFIX+='
         rm -rvf *.o
         rm -rvf convertUgridToVtk
         rm -rvf convertPltToVtk
+        rm -rvf convertGammaToVtk

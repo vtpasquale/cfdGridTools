@@ -41,53 +41,47 @@ void Gamma::printVtk(const char* myFileName)
 
 void Gamma::getMeshData()
 {
-
-    printf("getMeshData Check 1\n");
     int64_t idx;
 
     /* Try to open the file and ensure its version is 1
-    (single precision reals) and dimension is 3 */
-
-    idx = GmfOpenMesh(meshFileName, GmfRead, &FilVer, &dim );
-
-    printf("getMeshData Check 2\n");
+    (single precision reals) and dimension is 2 */
+    int thisVer, thisDim;
+    idx = GmfOpenMesh(meshFileName, GmfRead, &thisVer, &thisDim );
 
     if( !idx ){
         printf("cannot open mesh/solution file %s\n", meshFileName);
         exit(1);
     }
 
-    /* Read the number of vertices and triangles and allocate
-    a triangle table (tt[nbt][4]) to store each triangle
-    vertices and reference (hence the fourth integer).
-    Two tables are allocated for the vertices:
-    ct[nbv][3] to store the three coordinates
-    rt[nbv] to store the references. */
-
     if( !NmbVer || !NmbTri ){
         printf("No nodes  or triangles in mesh file %s\n", meshFileName);
         exit(1);
     }
 
-    printf("getMeshData Check 3\n");
+    // printf("idx,thisVer,thisDim = %ld,%d,%d\n",idx,thisVer,thisDim);
+    if (thisVer != 1){
+        printf("thisVer != 1\n");
+        exit(1);
+    }
 
-    /* Move the file pointer to the begining of vertices data
-    and start to loop over them. Then do likewise with triangles. */
-    double x, y, z;
-    int rt;
+    if (thisDim != 2){
+        printf("thisDim != 2\n");
+        exit(1);
+    }
+
+    nodes = new Node[NmbVer];
+    trias = new Tria[NmbTri];
+
     GmfGotoKwd( idx, GmfVertices );
-    for(int i=0;i<NmbVer;i++){
-        GmfGetLin( idx, GmfVertices,&x, &y, &z, &rt);
-        nodes[i].x=x;
-        nodes[i].y=y;
-        nodes[i].z=z;
-        nodes[i].rt=rt;
+    for(i=0;i<NmbVer;i++){
+        GmfGetLin( idx, GmfVertices, &nodes[i].x, &nodes[i].y, &nodes[i].rt);
+        nodes[i].z = 0.0;
+        // printf("nodes[i].x, nodes[i].y, nodes[i].rt = %f, %f, %d \n",nodes[i].x, nodes[i].y, nodes[i].rt );
     }
 
     GmfGotoKwd( idx, GmfTriangles );
-
-    for(int i=0;i<NmbTri;i++)
-        GmfGetLin( idx, GmfTriangles, &trias[i].n[0], &trias[i].n[1], &trias[i].n[2], &trias[i].n[4] );
+    for(i=0;i<NmbTri;i++)
+        GmfGetLin( idx, GmfTriangles, &trias[i].n[0], &trias[i].n[1], &trias[i].n[2], &trias[i].ref);
 
     GmfCloseMesh( idx );
 }
