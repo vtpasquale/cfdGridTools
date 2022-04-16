@@ -3,14 +3,13 @@
 using namespace std;
 
 namespace GammaNamespace{
-	class Node
+
+	class Edge
 	{
 	public:
-		double x;
-		double y;
-		double z;
-		int rt;
+		int n[2];
+		int ref;
 		void print();
-		void printVtk(FILE*);
 	};
+	
 }

@@ -38,29 +38,27 @@ void Gamma::printVtk(const char* myFileName)
 
 }
 
-
 void Gamma::getMeshData()
 {
     int64_t idx;
 
-    /* Try to open the file and ensure its version is 1
-    (single precision reals) and dimension is 2 */
+    /* Try to open the file and ensure its version is 3
+    (double precision reals) and dimension is 2 */
     int thisVer, thisDim;
     idx = GmfOpenMesh(meshFileName, GmfRead, &thisVer, &thisDim );
 
     if( !idx ){
-        printf("cannot open mesh/solution file %s\n", meshFileName);
+        printf("Cannot open mesh/solution file %s\n", meshFileName);
         exit(1);
     }
 
     if( !NmbVer || !NmbTri ){
-        printf("No nodes  or triangles in mesh file %s\n", meshFileName);
+        printf("No nodes or triangles in mesh file %s\n", meshFileName);
         exit(1);
     }
 
-    // printf("idx,thisVer,thisDim = %ld,%d,%d\n",idx,thisVer,thisDim);
-    if (thisVer != 1){
-        printf("thisVer != 1\n");
+    if ( ! (thisVer == 2 || thisVer == 3) ){
+        printf("Import stopped. Mesh version should be 2 or 3 (32-bit intergers and 64-bit reals). Actual Mesh version = %d. Use transmesh to convert to ascii and manual update the version number.\n",thisVer);
         exit(1);
     }
 
@@ -71,6 +69,7 @@ void Gamma::getMeshData()
 
     nodes = new Node[NmbVer];
     trias = new Tria[NmbTri];
+    edges = new Edge[NmbEdg];
 
     GmfGotoKwd( idx, GmfVertices );
     for(i=0;i<NmbVer;i++){
@@ -83,5 +82,34 @@ void Gamma::getMeshData()
     for(i=0;i<NmbTri;i++)
         GmfGetLin( idx, GmfTriangles, &trias[i].n[0], &trias[i].n[1], &trias[i].n[2], &trias[i].ref);
 
+    GmfGotoKwd( idx, GmfEdges );
+    for(i=0;i<NmbEdg;i++)
+        GmfGetLin( idx, GmfEdges, &edges[i].n[0], &edges[i].n[1], &edges[i].ref);
+
     GmfCloseMesh( idx );
+}
+
+void Gamma::writeMeshData(const char* outFileName)
+{
+    int64_t OutMsh;
+    OutMsh = GmfOpenMesh(outFileName, GmfWrite, FilVer, dim);
+    if( !OutMsh ){
+        printf("Issue accessing %s for writing output\n", outFileName);
+        exit(1);
+    }
+
+    GmfSetKwd(OutMsh, GmfVertices, NmbVer);
+    for(i=0;i<NmbVer;i++)
+        GmfSetLin(OutMsh, GmfVertices, nodes[i].x, nodes[i].y, nodes[i].rt);
+
+    GmfSetKwd(OutMsh, GmfTriangles, NmbTri);
+    for(i=0;i<=NmbTri;i++)
+        GmfSetLin(OutMsh, GmfTriangles, trias[i].n[0], trias[i].n[1], trias[i].n[2], trias[i].ref);
+
+    GmfSetKwd(OutMsh, GmfEdges, NmbEdg);
+    for(i=0;i<=NmbEdg;i++)
+        GmfSetLin(OutMsh, GmfEdges, edges[i].n[0], edges[i].n[1], edges[i].ref);
+
+    GmfCloseMesh(OutMsh);
+
 }

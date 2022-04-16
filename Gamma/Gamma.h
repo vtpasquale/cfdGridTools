@@ -2,6 +2,7 @@
 #include "libMeshb/libmeshb7.h"
 #include "members/Node.h"
 #include "members/Tria.h"
+#include "members/Edge.h"
 using namespace GammaNamespace;
 
 class Gamma
@@ -26,12 +27,14 @@ public:
     const char* meshFileName;
 
     // Mesh physical data
-	Node* nodes;
-    Tria* trias;
+	GammaNamespace::Node* nodes;
+    GammaNamespace::Tria* trias;
+    GammaNamespace::Edge* edges;
 
     // Methods
     void getMeshInfo(const char* fileName);
     void getMeshData();
+    void writeMeshData(const char* outFileName);
     void printVtk(const char* myFileName);
 
 };

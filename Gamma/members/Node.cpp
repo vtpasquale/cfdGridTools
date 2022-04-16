@@ -2,7 +2,6 @@
 using namespace std;
 namespace GNS = GammaNamespace;
 
-
 void GNS::Node::print()
 {
     printf("%f %f %f\n", x, y, z);

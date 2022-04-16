@@ -16,9 +16,9 @@ public:
     int nEdges;
 
     // Model data
-	Node* nodes;
-    Tria* trias;
-    Edge* edges;
+	PltNamespace::Node* nodes;
+    PltNamespace::Tria* trias;
+    PltNamespace::Edge* edges;
 
     // Methods
     void read(ifstream&);
