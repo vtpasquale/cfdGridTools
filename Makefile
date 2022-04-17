@@ -20,6 +20,7 @@ all: ${OBJ}
         ${CPP} -o readGammaWriteGamma readGammaWriteGamma.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
         ${CPP} -o convertPltToGamma convertPltToGamma.o Plt/Plt.o Plt/members/*.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
         ${CPP} -o convertGammaToPlt convertGammaToPlt.o Plt/Plt.o Plt/members/*.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o       
+        ${CPP} -o convertCbsToVtk convertCbsToVtk.o Plt/*.o Plt/members/*.o
 
 OBJ: ${SRCS}
         ${CPP} -c $<
@@ -35,3 +36,4 @@ clean:
         rm -rvf readGammaWriteGamma
         rm -rvf convertPltToGamma
         rm -rvf convertGammaToPlt
+        rm -rvf convertCbsToVtk
