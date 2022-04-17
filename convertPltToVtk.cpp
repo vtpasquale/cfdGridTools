@@ -8,8 +8,6 @@ int main(int argc, char* argv[]) {
     ifstream myFileStream(argv[1]);
     Plt plt;
     plt.read(myFileStream);
-    plt.printPlt();
-
     plt.printVtk(argv[2]);
 
     return 0;

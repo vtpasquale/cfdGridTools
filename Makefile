@@ -18,7 +18,8 @@ all: ${OBJ}
         ${CPP} -o convertPltToVtk convertPltToVtk.o Plt/Plt.o Plt/members/*.o
         ${CPP} -o convertGammaToVtk convertGammaToVtk.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
         ${CPP} -o readGammaWriteGamma readGammaWriteGamma.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
-        ${CPP} -o convertPltToGamma convertPltToGamma.o Plt/Plt.o Plt/members/*.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o       
+        ${CPP} -o convertPltToGamma convertPltToGamma.o Plt/Plt.o Plt/members/*.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
+        ${CPP} -o convertGammaToPlt convertGammaToPlt.o Plt/Plt.o Plt/members/*.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o       
 
 OBJ: ${SRCS}
         ${CPP} -c $<
@@ -32,3 +33,5 @@ clean:
         rm -rvf convertPltToVtk
         rm -rvf convertGammaToVtk
         rm -rvf readGammaWriteGamma
+        rm -rvf convertPltToGamma
+        rm -rvf convertGammaToPlt

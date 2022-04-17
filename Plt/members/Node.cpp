@@ -13,9 +13,9 @@ void PLTN::Node::read(ifstream& myFileStream)
     stringstream(line) >> id >> x >> y;
 }
 
-void PLTN::Node::print()
+void PLTN::Node::write(FILE* fid)
 {
-    printf("%d %f %f 0.0\n", id, x, y);
+    fprintf(fid,"%d %.8E %.8E\n", id, x, y);
 }
 
 void PLTN::Node::printVtk(FILE* fid)

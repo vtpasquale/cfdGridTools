@@ -1,6 +1,5 @@
 #include "Edge.h"
 #include "blazekReadline.h"
-#include <fstream>
 #include <sstream>
 using namespace std;
 namespace PLTN = PltNamespace;
@@ -12,7 +11,7 @@ void PLTN::Edge::read(ifstream& myFileStream)
     stringstream(line) >> n[0] >> n[1] >> element >> boundary;
 }
 
-void PLTN::Edge::print()
+void PLTN::Edge::write(FILE* fid)
 {
-    printf("%d %d %d %d\n", n[0], n[1], element, boundary);
+    fprintf(fid,"%d %d %d %d\n", n[0], n[1], element, boundary);
 }

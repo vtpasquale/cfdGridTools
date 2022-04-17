@@ -12,21 +12,25 @@ void Plt::read(ifstream& myFileStream)
     readModelData(myFileStream);
 }
 
-void Plt::printPlt()
+void Plt::write(const char* myFileName)
 {
-    printf("%d %d %d\n", nElements,nNodes,nEdges);
+
+    FILE* fid;
+    fid = fopen(myFileName,"w");
+
+    fprintf(fid,"%d %d %d\n", nElements,nNodes,nEdges);
 
     // Print trias
     for (int i = 0; i < nElements; i++)
-        trias[i].print();
+        trias[i].write(fid);
 
     // Print nodes
     for (int i = 0; i < nNodes; i++)
-        nodes[i].print();
+        nodes[i].write(fid);
 
     //Print edges
     for (int i = 0; i < nEdges; i++)
-        edges[i].print();
+        edges[i].write(fid);
 
 }
 

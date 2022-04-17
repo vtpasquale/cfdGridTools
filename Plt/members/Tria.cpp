@@ -12,9 +12,9 @@ void PLTN::Tria::read(ifstream& myFileStream)
     stringstream(line) >> id >> n[0] >> n[1] >> n[2];
 }
 
-void PLTN::Tria::print()
+void PLTN::Tria::write(FILE* fid)
 {
-    printf("%d %d %d %d\n", id, n[0], n[1], n[2]);
+    fprintf(fid,"%d %d %d %d\n", id, n[0], n[1], n[2]);
 }
 
 void PLTN::Tria::printVtk(FILE* fid)

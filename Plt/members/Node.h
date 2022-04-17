@@ -10,7 +10,7 @@ namespace PltNamespace{
 		double x;
 		double y;
 		void read(ifstream&);
-		void print();
+		void write(FILE*);
 		void printVtk(FILE*);
 	};
 }

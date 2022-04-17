@@ -11,7 +11,7 @@ namespace PltNamespace{
 		int element;
 		int boundary;
 		void read(ifstream&);
-		void print();
+		void write(FILE*);
 	};
 	
 }
