@@ -19,13 +19,13 @@ all: ${MEM_OBJ} ${CLS_OBJ}
 
 # Build Ugrid class object from source
 CLS_OBJ: ${CLS_SRCS}
-        ${CPP} -c $<
+	${CPP} -c $<
 
 # Build Ugrid member objects from source
 MEM_OBJ: ${MEM_SRCS}
-        ${CPP} -c $<
+	${CPP} -c $<
 
 clean:
-        @echo "Cleaning up..."
-        rm -rvf ./members/*.o
-        rm -rvf *.o
+	@echo "Cleaning up..."
+	rm -rvf ./members/*.o
+	rm -rvf *.o
