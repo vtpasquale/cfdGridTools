@@ -12,9 +12,9 @@ void UGN::Hexa::read(ifstream& myFileStream)
     stringstream(line) >> n[0] >> n[1] >> n[2] >> n[3] >> n[4] >> n[5] >> n[6] >> n[7];
 }
 
-void UGN::Hexa::print()
+void UGN::Hexa::write(FILE* fid)
 {
-    printf("%d %d %d %d %d %d %d %d\n", n[0], n[1], n[2], n[3], n[4], n[5], n[6], n[7]);
+    fprintf(fid,"%d %d %d %d %d %d %d %d\n", n[0], n[1], n[2], n[3], n[4], n[5], n[6], n[7]);
 }
 
 void UGN::Hexa::printVtk(FILE* fid)

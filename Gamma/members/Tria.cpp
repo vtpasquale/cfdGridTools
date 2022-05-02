@@ -2,9 +2,9 @@
 using namespace std;
 namespace GNS = GammaNamespace;
 
-void GNS::Tria::print()
+void GNS::Tria::write(FILE* fid)
 {
-    printf("%d %d %d\n", n[0], n[1], n[2]);
+    fprintf(fid,"%d %d %d\n", n[0], n[1], n[2]);
 }
 
 void GNS::Tria::printVtk(FILE* fid)

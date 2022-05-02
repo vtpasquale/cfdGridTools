@@ -10,7 +10,7 @@ namespace GammaNamespace{
 		double y;
 		double z;
 		int rt;
-		void print();
+		void write(FILE*);
 		void printVtk(FILE*);
 	};
 }

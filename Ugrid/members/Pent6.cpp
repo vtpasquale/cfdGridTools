@@ -12,9 +12,9 @@ void UGN::Pent6::read(ifstream& myFileStream)
     stringstream(line) >> n[0] >> n[1] >> n[2] >> n[3] >> n[4] >> n[5];
 }
 
-void UGN::Pent6::print()
+void UGN::Pent6::write(FILE* fid)
 {
-    printf("%d %d %d %d %d %d\n", n[0], n[1], n[2], n[3], n[4], n[5]);
+    fprintf(fid,"%d %d %d %d %d %d\n", n[0], n[1], n[2], n[3], n[4], n[5]);
 }
 
 void UGN::Pent6::printVtk(FILE* fid)

@@ -8,7 +8,7 @@ namespace UgridNamespace{
 	public:
 		int n[4];
 		void read(ifstream&);
-		void print();
+		void write(FILE*);
 		void printVtk(FILE*);
 	};
 }

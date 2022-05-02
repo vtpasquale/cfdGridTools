@@ -12,9 +12,9 @@ void UGN::Quad::read(ifstream& myFileStream)
     stringstream(line) >> n[0] >> n[1] >> n[2] >> n[3];
 }
 
-void UGN::Quad::print()
+void UGN::Quad::write(FILE* fid)
 {
-    printf("%d %d %d %d\n", n[0], n[1], n[2], n[3]);
+    fprintf(fid,"%d %d %d %d\n", n[0], n[1], n[2], n[3]);
 }
 
 void UGN::Quad::printVtk(FILE* fid)

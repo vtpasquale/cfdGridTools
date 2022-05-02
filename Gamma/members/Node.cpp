@@ -2,9 +2,9 @@
 using namespace std;
 namespace GNS = GammaNamespace;
 
-void GNS::Node::print()
+void GNS::Node::write(FILE* fid)
 {
-    printf("%f %f %f\n", x, y, z);
+    fprintf(fid,"%f %f %f\n", x, y, z);
 }
 
 void GNS::Node::printVtk(FILE* fid)

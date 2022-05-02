@@ -12,9 +12,9 @@ void UGN::Tria::read(ifstream& myFileStream)
     stringstream(line) >> n[0] >> n[1] >> n[2];
 }
 
-void UGN::Tria::print()
+void UGN::Tria::write(FILE* fid)
 {
-    printf("%d %d %d\n", n[0], n[1], n[2]);
+    fprintf(fid,"%d %d %d\n", n[0], n[1], n[2]);
 }
 
 void UGN::Tria::printVtk(FILE* fid)

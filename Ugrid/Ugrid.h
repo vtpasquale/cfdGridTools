@@ -41,7 +41,7 @@ public:
 
     // Methods
     void read(ifstream&);
-    void printUgrid();
+    void write(const char* myFileName);
     void printVtk(const char* myFileName);
 
 private:

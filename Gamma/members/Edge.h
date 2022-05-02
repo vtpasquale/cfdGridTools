@@ -9,7 +9,7 @@ namespace GammaNamespace{
 	public:
 		int n[2];
 		int ref;
-		void print();
+		void write(FILE*);
 	};
 	
 }

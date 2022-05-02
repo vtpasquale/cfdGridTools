@@ -12,40 +12,43 @@ void Ugrid::read(ifstream& myFileStream)
     readModelData(myFileStream);
 }
 
-void Ugrid::printUgrid()
+void Ugrid::write(const char* myFileName)
 {
-    printf("%d %d %d %d %d %d %d\n", nNodes, nSurfTrias, nSurfQuads, nVolTets, nVolPents5, nVolPents6, nVolHexs);
+    FILE* fid;
+    fid = fopen(myFileName,"w");
+
+    fprintf(fid,"%d %d %d %d %d %d %d\n", nNodes, nSurfTrias, nSurfQuads, nVolTets, nVolPents5, nVolPents6, nVolHexs);
 
     // Print nodes
     for (int i = 0; i < nNodes; i++)
-        nodes[i].print();
+        nodes[i].write(fid);
 
     // Print trias
     for (int i = 0; i < nSurfTrias; i++)
-        trias[i].print();
+        trias[i].write(fid);
     //Print Quads
     for (int i = 0; i < nSurfQuads; i++)
-        quads[i].print();
+        quads[i].write(fid);
 
     //Print Surface Bondary Face IDs
     for (int i = 0; i < nBoundarySurfFaces; i++)
-        boundarySurfFaces[i].print();
+        boundarySurfFaces[i].write(fid);
 
     //Print Tets
     for (int i = 0; i < nVolTets; i++)
-        tets[i].print();
+        tets[i].write(fid);
 
     //Print Pent5
     for (int i = 0; i < nVolPents5; i++)
-        pent5s[i].print();
+        pent5s[i].write(fid);
 
     //Print Pent6
     for (int i = 0; i < nVolPents6; i++)
-        pent6s[i].print();
+        pent6s[i].write(fid);
 
     //Print Hex
     for (int i = 0; i < nVolHexs; i++)
-        hexa[i].print();
+        hexa[i].write(fid);
 }
 
 void Ugrid::printVtk(const char* myFileName)

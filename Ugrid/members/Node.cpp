@@ -13,9 +13,9 @@ void UGN::Node::read(ifstream& myFileStream)
     stringstream(line) >> x >> y >> z;
 }
 
-void UGN::Node::print()
+void UGN::Node::write(FILE* fid)
 {
-    printf("%f %f %f\n", x, y, z);
+    fprintf(fid,"%f %f %f\n", x, y, z);
 }
 
 void UGN::Node::printVtk(FILE* fid)

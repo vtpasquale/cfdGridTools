@@ -10,7 +10,7 @@ namespace UgridNamespace{
 		double y;
 		double z;
 		void read(ifstream&);
-		void print();
+		void write(FILE*);
 		void printVtk(FILE*);
 	};
 }

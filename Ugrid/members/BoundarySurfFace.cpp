@@ -12,7 +12,7 @@ void UGN::BoundarySurfFace::read(ifstream& myFileStream)
     stringstream(line) >> n;
 }
 
-void UGN::BoundarySurfFace::print()
+void UGN::BoundarySurfFace::write(FILE* fid)
 {
-    printf("%d\n", n);
+    fprintf(fid,"%d\n", n);
 }
