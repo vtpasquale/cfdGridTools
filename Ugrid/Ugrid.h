@@ -30,14 +30,14 @@ public:
     int nCellData;
 
     // Model data
-	Node* nodes;
-    Tria* trias;
-    Quad* quads;
-    BoundarySurfFace* boundarySurfFaces;
-    Tet* tets;
-    Pent5* pent5s;
-    Pent6* pent6s;
-    Hexa* hexa;
+	UgridNamespace::Node* nodes;
+    UgridNamespace::Tria* trias;
+    UgridNamespace::Quad* quads;
+    UgridNamespace::BoundarySurfFace* boundarySurfFaces;
+    UgridNamespace::Tet* tets;
+    UgridNamespace::Pent5* pent5s;
+    UgridNamespace::Pent6* pent6s;
+    UgridNamespace::Hexa* hexa;
 
     // Methods
     void read(ifstream&);
