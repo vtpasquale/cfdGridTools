@@ -1,6 +1,7 @@
 #include "Gamma/Gamma.h"
 #include "Ugrid/Ugrid.h"
 #include "Plt/Plt.h"
+#include "Ugr/Ugr.h"
 #include <iostream>
 #include <filesystem> // C++17
 namespace fs = std::filesystem;
@@ -55,6 +56,7 @@ int main(int argc, char *argv[])
         ifstream myFileStream(argv[1]);
         Ugrid ugrid;
         ugrid.read(myFileStream);
+        myFileStream.close();
         ugrid.printVtk(argv[2]);
     }
     else if (inputGridFile.extension().compare(".plt")==0)
@@ -63,7 +65,18 @@ int main(int argc, char *argv[])
         ifstream myFileStream(argv[1]);
         Plt pltGrid;
         pltGrid.read(myFileStream);
+        myFileStream.close();
         pltGrid.printVtk(argv[2]);
+    }
+    else if (inputGridFile.extension().compare(".ugr")==0)
+    {
+        // Unstruct2D format
+        ifstream myFileStream(argv[1]);
+        Ugr ugrGrid;
+        ugrGrid.read(myFileStream);
+        myFileStream.close();
+        ugrGrid.write("test.ugr");
+        ugrGrid.printVtk(argv[2]);
     }
     else
     {
