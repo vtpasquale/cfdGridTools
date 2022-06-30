@@ -103,11 +103,11 @@ void Gamma::writeMeshData(const char* outFileName)
         GmfSetLin(OutMsh, GmfVertices, nodes[i].x, nodes[i].y, nodes[i].rt);
 
     GmfSetKwd(OutMsh, GmfTriangles, NmbTri);
-    for(i=0;i<=NmbTri;i++)
+    for(i=0;i<NmbTri;i++)
         GmfSetLin(OutMsh, GmfTriangles, trias[i].n[0], trias[i].n[1], trias[i].n[2], trias[i].ref);
 
     GmfSetKwd(OutMsh, GmfEdges, NmbEdg);
-    for(i=0;i<=NmbEdg;i++)
+    for(i=0;i<NmbEdg;i++)
         GmfSetLin(OutMsh, GmfEdges, edges[i].n[0], edges[i].n[1], edges[i].ref);
 
     GmfCloseMesh(OutMsh);

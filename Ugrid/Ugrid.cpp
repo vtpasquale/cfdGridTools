@@ -49,6 +49,8 @@ void Ugrid::write(const char* myFileName)
     //Print Hex
     for (int i = 0; i < nVolHexs; i++)
         hexa[i].write(fid);
+
+    fclose(fid);
 }
 
 void Ugrid::printVtk(const char* myFileName)
