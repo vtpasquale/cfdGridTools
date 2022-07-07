@@ -5,12 +5,12 @@
 using namespace std;
 using namespace GammaNamespace;
 
-void Gamma::printVtk(const char* myFileName)
+void Gamma::printVtk(const char *myFileName)
 {
     // Write the mesh to a.vtk file.
     // https://vtk.org/wp-content/uploads/2015/04/file-formats.pdf
-    FILE* fid;
-    fid = fopen(myFileName,"w");
+    FILE *fid;
+    fid = fopen(myFileName, "w");
     fprintf(fid, "# vtk DataFile Version 3.0\n");
     fprintf(fid, "My example\n");
     fprintf(fid, "ASCII\n");
@@ -22,7 +22,7 @@ void Gamma::printVtk(const char* myFileName)
         nodes[i].printVtk(fid);
 
     // CELLS
-    fprintf(fid, "CELLS %d %d\n", NmbTri, 4*NmbTri);
+    fprintf(fid, "CELLS %d %d\n", NmbTri, 4 * NmbTri);
     // Print trias
     for (int i = 0; i < NmbTri; i++)
         trias[i].printVtk(fid);
@@ -35,7 +35,6 @@ void Gamma::printVtk(const char* myFileName)
         fprintf(fid, "5\n");
 
     fclose(fid);
-
 }
 
 void Gamma::getMeshData()
@@ -45,24 +44,28 @@ void Gamma::getMeshData()
     /* Try to open the file and ensure its version is 3
     (double precision reals) and dimension is 2 */
     int thisVer, thisDim;
-    idx = GmfOpenMesh(meshFileName, GmfRead, &thisVer, &thisDim );
+    idx = GmfOpenMesh(meshFileName, GmfRead, &thisVer, &thisDim);
 
-    if( !idx ){
+    if (!idx)
+    {
         printf("Cannot open mesh/solution file %s\n", meshFileName);
         exit(1);
     }
 
-    if( !NmbVer || !NmbTri ){
+    if (!NmbVer || !NmbTri)
+    {
         printf("No nodes or triangles in mesh file %s\n", meshFileName);
         exit(1);
     }
 
-    if ( ! (thisVer == 2 || thisVer == 3) ){
-        printf("Import stopped. Mesh version should be 2 or 3 (32-bit intergers and 64-bit reals). Actual Mesh version = %d. Use transmesh to convert to ascii and manual update the version number.\n",thisVer);
+    if (!(thisVer == 2 || thisVer == 3))
+    {
+        printf("Import stopped. Mesh version should be 2 or 3 (32-bit intergers and 64-bit reals). Actual Mesh version = %d. Use transmesh to convert to ascii and manual update the version number.\n", thisVer);
         exit(1);
     }
 
-    if (thisDim != 2){
+    if (thisDim != 2)
+    {
         printf("thisDim != 2\n");
         exit(1);
     }
@@ -71,45 +74,92 @@ void Gamma::getMeshData()
     trias = new Tria[NmbTri];
     edges = new Edge[NmbEdg];
 
-    GmfGotoKwd( idx, GmfVertices );
-    for(i=0;i<NmbVer;i++){
-        GmfGetLin( idx, GmfVertices, &nodes[i].x, &nodes[i].y, &nodes[i].rt);
+    GmfGotoKwd(idx, GmfVertices);
+    for (i = 0; i < NmbVer; i++)
+    {
+        GmfGetLin(idx, GmfVertices, &nodes[i].x, &nodes[i].y, &nodes[i].rt);
         nodes[i].z = 0.0;
         // printf("nodes[i].x, nodes[i].y, nodes[i].rt = %f, %f, %d \n",nodes[i].x, nodes[i].y, nodes[i].rt );
     }
 
-    GmfGotoKwd( idx, GmfTriangles );
-    for(i=0;i<NmbTri;i++)
-        GmfGetLin( idx, GmfTriangles, &trias[i].n[0], &trias[i].n[1], &trias[i].n[2], &trias[i].ref);
+    GmfGotoKwd(idx, GmfTriangles);
+    for (i = 0; i < NmbTri; i++)
+        GmfGetLin(idx, GmfTriangles, &trias[i].n[0], &trias[i].n[1], &trias[i].n[2], &trias[i].ref);
 
-    GmfGotoKwd( idx, GmfEdges );
-    for(i=0;i<NmbEdg;i++)
-        GmfGetLin( idx, GmfEdges, &edges[i].n[0], &edges[i].n[1], &edges[i].ref);
+    GmfGotoKwd(idx, GmfEdges);
+    for (i = 0; i < NmbEdg; i++)
+        GmfGetLin(idx, GmfEdges, &edges[i].n[0], &edges[i].n[1], &edges[i].ref);
 
-    GmfCloseMesh( idx );
+    GmfCloseMesh(idx);
 }
 
-void Gamma::writeMeshData(const char* outFileName)
+void Gamma::getSolutionData()
+{
+    int64_t idx;
+    double *SolTab;
+
+    /* Try to open the file and ensure its version is 3
+    (double precision reals) and dimension is 2 */
+    int thisVer, thisDim;
+    idx = GmfOpenMesh(meshFileName, GmfRead, &thisVer, &thisDim);
+
+    if (!idx)
+    {
+        printf("Cannot open mesh/solution file %s\n", meshFileName);
+        exit(1);
+    }
+
+    if (!(thisVer == 2 || thisVer == 3))
+    {
+        printf("Import stopped. Mesh version should be 2 or 3 (32-bit intergers and 64-bit reals). Actual Mesh version = %d. Use transmesh to convert to ascii and manual update the version number.\n", thisVer);
+        exit(1);
+    }
+
+    NbrLin = GmfStatKwd(idx, GmfSolAtVertices, &NbrTyp, &SolSiz, TypTab);
+    printf("NbrLin = %d, NmbTyp = %d, SolSiz = %d\n", NbrLin, NbrTyp, SolSiz);
+    SolTab = new double[(NbrLin + 1) * SolSiz];
+
+    // Solution field block reading
+    GmfGetBlock(idx, GmfSolAtVertices, 1, NbrLin, 0, NULL, NULL,
+                GmfDoubleVec, SolSiz, &SolTab[1 * SolSiz], &SolTab[NbrLin * SolSiz]);
+
+    // Print each solutions of each vertices
+    // for (i = 1; i <= NbrLin; i++)
+        // for (j = 0; j < SolSiz; j++)
+            // printf("%d, %d = %g\n", i, j, SolTab[i * SolSiz + j]);
+
+    // Close the mesh file and free memory
+    GmfCloseMesh(idx);
+
+    for (i = 1; i < NbrLin+1; i++)
+    {
+        printf("%f %f %f %f\n", SolTab[i * SolSiz + 0], SolTab[i * SolSiz + 1], SolTab[i * SolSiz + 2], SolTab[i * SolSiz + 3]);
+    }
+
+    free(SolTab);
+}
+
+void Gamma::writeMeshData(const char *outFileName)
 {
     int64_t OutMsh;
     OutMsh = GmfOpenMesh(outFileName, GmfWrite, FilVer, dim);
-    if( !OutMsh ){
+    if (!OutMsh)
+    {
         printf("Issue accessing %s for writing output\n", outFileName);
         exit(1);
     }
 
     GmfSetKwd(OutMsh, GmfVertices, NmbVer);
-    for(i=0;i<NmbVer;i++)
+    for (i = 0; i < NmbVer; i++)
         GmfSetLin(OutMsh, GmfVertices, nodes[i].x, nodes[i].y, nodes[i].rt);
 
     GmfSetKwd(OutMsh, GmfTriangles, NmbTri);
-    for(i=0;i<NmbTri;i++)
+    for (i = 0; i < NmbTri; i++)
         GmfSetLin(OutMsh, GmfTriangles, trias[i].n[0], trias[i].n[1], trias[i].n[2], trias[i].ref);
 
     GmfSetKwd(OutMsh, GmfEdges, NmbEdg);
-    for(i=0;i<NmbEdg;i++)
+    for (i = 0; i < NmbEdg; i++)
         GmfSetLin(OutMsh, GmfEdges, edges[i].n[0], edges[i].n[1], edges[i].ref);
 
     GmfCloseMesh(OutMsh);
-
 }

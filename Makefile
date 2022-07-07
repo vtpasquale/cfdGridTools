@@ -22,6 +22,7 @@ all: ${OBJ}
 	${CPP} -o convertUgrToGamma convertUgrToGamma.o Ugr/Ugr.o Ugr/members/*.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
 	${CPP} -o scaleUgrid scaleUgrid.o Ugrid/Ugrid.o Ugrid/members/*.o
 	${CPP} -o convertGridToVtk convertGridToVtk.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o Plt/Plt.o Plt/members/*.o Ugrid/Ugrid.o Ugrid/members/*.o Ugr/Ugr.o Ugr/members/*.o
+	${CPP} -o readGammaSolution readGammaSolution.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
 
 OBJ: ${SRCS}
 	${CPP} -c $<
@@ -39,3 +40,4 @@ clean:
 	rm -rvf convertUgrToGamma
 	rm -rvf scaleUgrid
 	rm -rvf convertGridToVtk
+	rm -rvf readGammaSolution

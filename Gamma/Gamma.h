@@ -34,6 +34,7 @@ public:
     // Methods
     void getMeshInfo(const char* fileName);
     void getMeshData();
+    void getSolutionData();
     void writeMeshData(const char* outFileName);
     void printVtk(const char* myFileName);
 
