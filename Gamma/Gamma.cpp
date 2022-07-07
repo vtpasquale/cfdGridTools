@@ -96,7 +96,6 @@ void Gamma::getMeshData()
 void Gamma::getSolutionData()
 {
     int64_t idx;
-    double *SolTab;
 
     /* Try to open the file and ensure its version is 3
     (double precision reals) and dimension is 2 */
@@ -106,37 +105,34 @@ void Gamma::getSolutionData()
     if (!idx)
     {
         printf("Cannot open mesh/solution file %s\n", meshFileName);
+        GmfCloseMesh(idx);
         exit(1);
     }
 
     if (!(thisVer == 2 || thisVer == 3))
     {
         printf("Import stopped. Mesh version should be 2 or 3 (32-bit intergers and 64-bit reals). Actual Mesh version = %d. Use transmesh to convert to ascii and manual update the version number.\n", thisVer);
+        GmfCloseMesh(idx);
         exit(1);
     }
 
     NbrLin = GmfStatKwd(idx, GmfSolAtVertices, &NbrTyp, &SolSiz, TypTab);
     printf("NbrLin = %d, NmbTyp = %d, SolSiz = %d\n", NbrLin, NbrTyp, SolSiz);
-    SolTab = new double[(NbrLin + 1) * SolSiz];
+    SolTab = new double[NbrLin*SolSiz];
 
     // Solution field block reading
     GmfGetBlock(idx, GmfSolAtVertices, 1, NbrLin, 0, NULL, NULL,
-                GmfDoubleVec, SolSiz, &SolTab[1 * SolSiz], &SolTab[NbrLin * SolSiz]);
+                GmfDoubleVec, SolSiz, &SolTab[0], &SolTab[(NbrLin*SolSiz)-1]);
 
     // Print each solutions of each vertices
-    // for (i = 1; i <= NbrLin; i++)
-        // for (j = 0; j < SolSiz; j++)
-            // printf("%d, %d = %g\n", i, j, SolTab[i * SolSiz + j]);
 
-    // Close the mesh file and free memory
-    GmfCloseMesh(idx);
-
-    for (i = 1; i < NbrLin+1; i++)
+    for (i = 0; i < NbrLin; i++)
     {
         printf("%f %f %f %f\n", SolTab[i * SolSiz + 0], SolTab[i * SolSiz + 1], SolTab[i * SolSiz + 2], SolTab[i * SolSiz + 3]);
     }
 
-    free(SolTab);
+    // Close the mesh file
+    GmfCloseMesh(idx);
 }
 
 void Gamma::writeMeshData(const char *outFileName)
@@ -160,6 +156,23 @@ void Gamma::writeMeshData(const char *outFileName)
     GmfSetKwd(OutMsh, GmfEdges, NmbEdg);
     for (i = 0; i < NmbEdg; i++)
         GmfSetLin(OutMsh, GmfEdges, edges[i].n[0], edges[i].n[1], edges[i].ref);
+
+    GmfCloseMesh(OutMsh);
+}
+
+void Gamma::writeSolutionData(const char *outFileName)
+{
+    int64_t OutMsh;
+    OutMsh = GmfOpenMesh(outFileName, GmfWrite, FilVer, dim);
+    if (!OutMsh)
+    {
+        printf("Issue accessing %s for writing output\n", outFileName);
+        exit(1);
+    }
+
+    GmfSetKwd(OutMsh, GmfSolAtVertices, NbrLin, NbrTyp, &TypTab);
+    GmfSetBlock(OutMsh, GmfSolAtVertices, 1, NbrLin, 0, NULL, NULL,
+         GmfDoubleVec, SolSiz, &SolTab[0], &SolTab[(NbrLin*SolSiz)-1]);
 
     GmfCloseMesh(OutMsh);
 }

@@ -6,8 +6,8 @@ int main(int argc, char* argv[]) {
     Gamma gamma;
     gamma.getMeshInfo(argv[1]);
     
-    printf("_a_\n");
     gamma.getSolutionData();
+    gamma.writeSolutionData(argv[2]);
 
     return 0;
 }

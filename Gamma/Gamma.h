@@ -25,6 +25,7 @@ public:
     int        NbrLin, SolSiz, NbrTyp, TypTab[ GmfMaxTyp ];
 
     const char* meshFileName;
+    double *SolTab; // Solution table
 
     // Mesh physical data
 	GammaNamespace::Node* nodes;
@@ -36,6 +37,7 @@ public:
     void getMeshData();
     void getSolutionData();
     void writeMeshData(const char* outFileName);
+    void writeSolutionData(const char* outFileName);
     void printVtk(const char* myFileName);
 
 };
