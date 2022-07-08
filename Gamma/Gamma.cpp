@@ -105,7 +105,6 @@ void Gamma::getSolutionData()
     if (!idx)
     {
         printf("Cannot open mesh/solution file %s\n", meshFileName);
-        GmfCloseMesh(idx);
         exit(1);
     }
 
@@ -125,11 +124,10 @@ void Gamma::getSolutionData()
                 GmfDoubleVec, SolSiz, &SolTab[0], &SolTab[(NbrLin*SolSiz)-1]);
 
     // Print each solutions of each vertices
-
-    for (i = 0; i < NbrLin; i++)
-    {
-        printf("%f %f %f %f\n", SolTab[i * SolSiz + 0], SolTab[i * SolSiz + 1], SolTab[i * SolSiz + 2], SolTab[i * SolSiz + 3]);
-    }
+    // for (i = 0; i < NbrLin; i++)
+    // {
+    //     printf("%f %f %f %f\n", SolTab[i * SolSiz + 0], SolTab[i * SolSiz + 1], SolTab[i * SolSiz + 2], SolTab[i * SolSiz + 3]);
+    // }
 
     // Close the mesh file
     GmfCloseMesh(idx);
