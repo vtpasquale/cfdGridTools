@@ -34,27 +34,16 @@ int main(int argc, char *argv[])
         trias[i].ref = 999;
     }
 
-    int lastEdgeInBoundary = -1; // set to -1 so initial values set when i == 0
-    int boundaryIndex = 0;
-    for (int i = 0; i < ugr.nEdges; i++)
+    int edgeStart = 0;
+    for (int i = 0; i < ugr.nBoundaries; i++)
     {
-
-        if (i - 1 == lastEdgeInBoundary)
+        for (int j = edgeStart; j <= ugr.boundaries[i].lastFace; j++)
         {
-            lastEdgeInBoundary = ugr.boundaries[i].lastFace;
-            boundaryIndex++;
+            edges[j].n[0] = ugr.edges[j].n[0] + 1;
+            edges[j].n[1] = ugr.edges[j].n[1] + 1;
+            edges[j].ref = ugr.boundaries[i].type;
         }
-
-        edges[i].n[0] = ugr.edges[i].n[0] + 1;
-        edges[i].n[1] = ugr.edges[i].n[1] + 1;
-        edges[i].ref = ugr.boundaries[boundaryIndex-1].type;
-    }
-    if (boundaryIndex != ugr.nBoundaries)
-    {
-        cout << boundaryIndex << "\n";
-        cout << ugr.nBoundaries << "\n";
-        cout << "Boundary processing error!\n";
-        return 1;
+        edgeStart = ugr.boundaries[i].lastFace+1;
     }
 
     // Store data in Gamma object and write to file
