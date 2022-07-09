@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
         edges[i].n[0] = ugr.edges[i].n[0] + 1;
         edges[i].n[1] = ugr.edges[i].n[1] + 1;
-        edges[i].ref = boundaryIndex;
+        edges[i].ref = ugr.boundaries[boundaryIndex-1].type;
     }
     if (boundaryIndex != ugr.nBoundaries)
     {

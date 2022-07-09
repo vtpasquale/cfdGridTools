@@ -21,6 +21,7 @@ all: ${OBJ}
 	${CXX} $(CXXFLAGS) -o convertPltToGamma convertPltToGamma.o Plt/Plt.o Plt/members/*.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
 	${CXX} $(CXXFLAGS) -o convertGammaToPlt convertGammaToPlt.o Plt/Plt.o Plt/members/*.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
 	${CXX} $(CXXFLAGS) -o convertUgrToGamma convertUgrToGamma.o Ugr/Ugr.o Ugr/members/*.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
+	${CXX} $(CXXFLAGS) -o convertGammaToUgr convertGammaToUgr.o Ugr/Ugr.o Ugr/members/*.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
 	${CXX} $(CXXFLAGS) -o scaleUgrid scaleUgrid.o Ugrid/Ugrid.o Ugrid/members/*.o
 	${CXX} $(CXXFLAGS) -o convertGridToVtk convertGridToVtk.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o Plt/Plt.o Plt/members/*.o Ugrid/Ugrid.o Ugrid/members/*.o Ugr/Ugr.o Ugr/members/*.o
 	${CXX} $(CXXFLAGS) -o readGammaSolution readGammaSolution.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
@@ -39,6 +40,7 @@ clean:
 	rm -rvf convertPltToGamma
 	rm -rvf convertGammaToPlt
 	rm -rvf convertUgrToGamma
+	rm -rvf convertGammaToUgr
 	rm -rvf scaleUgrid
 	rm -rvf convertGridToVtk
 	rm -rvf readGammaSolution

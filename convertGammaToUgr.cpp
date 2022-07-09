@@ -6,17 +6,6 @@ namespace fs = std::filesystem;
 
 namespace UGR = UgrNamespace;
 
-// The Ugr format (for the Blazek Unstruct2D code) is restrictive in the following ways:
-// [1] The boundaries are arranged into segments (face groups - this is typical)
-// [2] Each node can only be in a one boundary segment
-// [3] The boundary nodes must be defined first in the file. 
-//     The nodes for the first segment must be defined first, 
-//     followed by the nodes for the second segement, and so on.
-//
-// This format coverter renumbers the nodes to comply with the format rules
-
-// Boundary condition type must be between 100 and 799
-
 int main(int argc, char *argv[])
 {
 
@@ -62,6 +51,7 @@ int main(int argc, char *argv[])
     gamma.getMeshInfo(argv[1]);
     gamma.getMeshData();
 
+    
     // Convert to Ugr member data
     UGR::Node nodes[gamma.NmbVer];
     UGR::Tria trias[gamma.NmbTri];
@@ -79,84 +69,60 @@ int main(int argc, char *argv[])
         trias[i].n[1] = gamma.trias[i].n[1] - 1;
         trias[i].n[2] = gamma.trias[i].n[2] - 1;
     }
-
+    
+    int lastEdgeType = gamma.edges[0].ref;
+    int boundaryIndex = 0;    
     for (int i = 0; i < gamma.NmbEdg; i++)
     {
+        // edges
         edges[i].n[0] = gamma.edges[i].n[0] - 1;
         edges[i].n[1] = gamma.edges[i].n[1] - 1;
-        // edges[i].ref = boundaryIndex;
-    }
 
-    // Loop over all possible boundary IDs and set a flag to true if used
-    bool typeUsedFlag[800];
+        // count segments (boundary face groups)
+        if (gamma.edges[i].ref != lastEdgeType)
+        {
+            // new edge segment
+            boundaryIndex++;
+            lastEdgeType = gamma.edges[i].ref;
+        }
+    }
+    int nBoundaries = boundaryIndex + 1;
+
+    // Boundaries object
+    UgrNamespace::Boundary* boundaries;
+    boundaries = new Boundary[nBoundaries];
+    boundaryIndex = 0;
+    lastEdgeType = gamma.edges[0].ref;
     for (int i = 0; i < gamma.NmbEdg; i++)
     {
-        if (gamma.edges[i].ref < 100 || gamma.edges[i].ref > 799 )
+        // new edge segment
+        if (gamma.edges[i].ref != lastEdgeType)
         {
-            std::cout << "Boundary reference number must be between 100 and 799. Value is " << gamma.edges[i].ref << ".\n";
-            return 1;
-        }
-        typeUsedFlag[gamma.edges[i].ref]=true;
-    }   
-
-    // Initialize renumbering data
-    int nextNode = 0;
-    int newNodeNumbers[gamma.NmbVer];
-    for (int i = 0; i < gamma.NmbVer; i++)
-    {
-        newNodeNumbers[i] = -777;
-    }
-
-    // Loop over all boundary IDs. Count segments. Set renumbering node IDs
-    int nBoundarySegments = 0;
-    for (int i = 100; i < 800; i++)
-    {
-        if (typeUsedFlag[i]==true)
-        {
-            nBoundarySegments++;
-            for (int j = 0; j < gamma.NmbEdg; j++)
-            {
-                if (i==gamma.edges[j].ref)
-                {
-                    // TODO add logic to not renumber more than once
-                    newNodeNumbers[gamma.edges[j].n[1]] = nextNode;
-                    nextNode++;
-                    newNodeNumbers[gamma.edges[j].n[2]] = nextNode;
-                    nextNode++;
-                }
-            }
+    		boundaries[boundaryIndex].type = gamma.edges[i-1].ref;
+    		boundaries[boundaryIndex].lastFace = i-1;
+	    	boundaries[boundaryIndex].lastNode = i-1; // I think lastFace and lastNode should be unified in the Ugr format.
+            boundaries[boundaryIndex].name = "bondary_number_"+to_string(boundaryIndex+1);
+            lastEdgeType = gamma.edges[i].ref;
+            boundaryIndex++;
         }
     }
-
-    // Finish defining new node IDs by looping over remaining nodes
-    for (int i = 0; i < gamma.NmbVer; i++)
-    {
-        if (newNodeNumbers[i]==-777)
-        {
-            newNodeNumbers[i] = nextNode;
-            nextNode++;
-        }
-    }
-
-    // Check the total
-    if (nextNode != gamma.NmbVer)
-    {
-        std::cout << "Boundary processing error!\n";
-        return 1;
-    }
-
-    // TODO Renumber the member data
+    boundaries[boundaryIndex].type = gamma.edges[gamma.NmbEdg-1].ref;
+    boundaries[boundaryIndex].lastFace = gamma.NmbEdg-1;
+	boundaries[boundaryIndex].lastNode = gamma.NmbEdg-1;
+    boundaries[boundaryIndex].name = "bondary_number_"+to_string(boundaryIndex+1);
 
     // Store data in Ugr object and write to file
     Ugr ugr;
     ugr.nNodes = gamma.NmbVer;
     ugr.nElements = gamma.NmbTri;
     ugr.nEdges = gamma.NmbEdg;
-
+    ugr.nBoundaries = nBoundaries;
+    
     // model data
     ugr.nodes = nodes;
     ugr.trias = trias;
     ugr.edges = edges;
+    ugr.boundaries = boundaries;
 
     ugr.write(argv[2]);
 
