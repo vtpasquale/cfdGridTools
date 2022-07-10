@@ -20,9 +20,9 @@ void Ugr::write(const char *myFileName)
     fid = fopen(myFileName, "w");
 
     // Header
-    fprintf(fid,"#\n");
-    fprintf(fid,"#\n");
-    fprintf(fid,"# no. of nodes, cells, boundaries:\n");
+    fprintf(fid, "#\n");
+    fprintf(fid, "#\n");
+    fprintf(fid, "# no. of nodes, cells, boundaries:\n");
     fprintf(fid, "%d %d %d\n", nNodes, nElements, nBoundaries);
 
     // Boundaries
@@ -103,7 +103,38 @@ void Ugr::readModelData(ifstream &myFileStream)
     for (int i = 0; i < nBoundaries; i++)
         boundaries[i].read(myFileStream);
 
-    nEdges = boundaries[nBoundaries - 1].lastFace + 1;
+    // Cound edges
+    int edgeCount = 0;
+    int ibegf = 0;
+    int ibegn = 0;
+    int iendf, iendn;
+    for (int i = 0; i < nBoundaries; i++)
+    {
+        boundaries[i].edgeStartIndex = edgeCount;
+        iendf = boundaries[i].lastFace;
+        iendn = boundaries[i].lastNode;
+        if (boundaries[i].type >= 700 && boundaries[i].type < 800) // periodic nodes
+        {
+            
+            for (int ibn = ibegn; ibn <= iendn; ibn++)
+            {
+                edgeCount++; // This for loop should be removed and replaced
+            }
+            
+
+        }
+        else // boundary faces
+        {
+            for (int ibf = ibegf; ibf <= iendf; ibf++)
+            {
+                edgeCount++; // This for loop should be removed and replaced
+            }
+        }
+        ibegf = iendf + 1;
+        ibegn = iendn + 1;
+        boundaries[i].edgeEndIndex = edgeCount;
+    }
+    nEdges = edgeCount;
 
     // Read Edges
     commentLine = ReadLine(myFileStream);

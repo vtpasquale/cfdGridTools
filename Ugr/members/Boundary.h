@@ -12,6 +12,9 @@ namespace UgrNamespace{
 		int lastNode;
 		string name;
 
+		int edgeStartIndex;
+		int edgeEndIndex;
+
 		void read(ifstream&);
 		void write(FILE*);
 	};

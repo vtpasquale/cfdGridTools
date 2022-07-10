@@ -6,9 +6,25 @@ namespace fs = std::filesystem;
 
 namespace UGR = UgrNamespace;
 
+
+int countDistinct(int a[], int size)
+{
+   int i, j, count = 1;
+   for (i = 1; i < size; i++){
+      for (j = 0; j < i; j++){
+         if (a[i] == a[j]){
+            break;
+         }
+      }
+      if (i == j){
+         count++;
+      }
+   }
+   return count;
+}
+
 int main(int argc, char *argv[])
 {
-
     // Confirm number of inputs
     std::cout << "Number of inputs: " << argc - 1 << "\n";
     if (argc != 3)
@@ -70,6 +86,7 @@ int main(int argc, char *argv[])
         trias[i].n[2] = gamma.trias[i].n[2] - 1;
     }
     
+    // Convert edges and count number of edge segments
     int lastEdgeType = gamma.edges[0].ref;
     int boundaryIndex = 0;    
     for (int i = 0; i < gamma.NmbEdg; i++)
@@ -78,19 +95,20 @@ int main(int argc, char *argv[])
         edges[i].n[0] = gamma.edges[i].n[0] - 1;
         edges[i].n[1] = gamma.edges[i].n[1] - 1;
 
-        // count segments (boundary face groups)
+        // count new segments (boundary face groups)
         if (gamma.edges[i].ref != lastEdgeType)
         {
             // new edge segment
             boundaryIndex++;
             lastEdgeType = gamma.edges[i].ref;
-        }
+        } 
     }
-    int nBoundaries = boundaryIndex + 1;
+    int nBoundaries = boundaryIndex + 1; 
 
-    // Boundaries object
+    // Create boundaries object
     UgrNamespace::Boundary* boundaries;
     boundaries = new Boundary[nBoundaries];
+    boundaries[0].edgeStartIndex = 0; 
     boundaryIndex = 0;
     lastEdgeType = gamma.edges[0].ref;
     for (int i = 0; i < gamma.NmbEdg; i++)
@@ -99,17 +117,54 @@ int main(int argc, char *argv[])
         if (gamma.edges[i].ref != lastEdgeType)
         {
     		boundaries[boundaryIndex].type = gamma.edges[i-1].ref;
-    		boundaries[boundaryIndex].lastFace = i-1;
-	    	boundaries[boundaryIndex].lastNode = i-1; // I think lastFace and lastNode should be unified in the Ugr format.
-            boundaries[boundaryIndex].name = "bondary_number_"+to_string(boundaryIndex+1);
+            boundaries[boundaryIndex].name = "boundary_number_"+to_string(boundaryIndex+1);
+            boundaries[boundaryIndex].edgeEndIndex = i-1;
             lastEdgeType = gamma.edges[i].ref;
+
             boundaryIndex++;
+            boundaries[boundaryIndex].edgeStartIndex = i;
         }
     }
     boundaries[boundaryIndex].type = gamma.edges[gamma.NmbEdg-1].ref;
-    boundaries[boundaryIndex].lastFace = gamma.NmbEdg-1;
-	boundaries[boundaryIndex].lastNode = gamma.NmbEdg-1;
-    boundaries[boundaryIndex].name = "bondary_number_"+to_string(boundaryIndex+1);
+    boundaries[boundaryIndex].name = "boundary_number_"+to_string(boundaryIndex+1);
+    boundaries[boundaryIndex].edgeEndIndex = gamma.NmbEdg-1;
+
+    // Count number of unique nodes on each edge
+    int *boundaryNodes;
+    int nEdgesOnBoundary;
+    int uniqueNodesOnBounary[nBoundaries];
+    for (int i = 0; i < nBoundaries; i++)
+    {
+        nEdgesOnBoundary = boundaries[i].edgeEndIndex - boundaries[i].edgeStartIndex + 1;
+        boundaryNodes = new int[2*nEdgesOnBoundary];
+        for (int j = 0; j < nEdgesOnBoundary; j++)
+        {
+            boundaryNodes[2*j] = gamma.edges[boundaries[i].edgeStartIndex+j].n[0];
+            boundaryNodes[2*j+1] = gamma.edges[boundaries[i].edgeStartIndex+j].n[1];
+        }
+        uniqueNodesOnBounary[i] = countDistinct(boundaryNodes,2*nEdgesOnBoundary);
+        printf("uniqueNodesOnBounary[%d]=%d\n",i,uniqueNodesOnBounary[i]);
+    }
+    delete boundaryNodes;
+    
+    // Determine boundary lastFace and lastNode
+    int lastNode = 0;
+    int lastFace = 0;
+    for (int i = 0; i < nBoundaries; i++)
+    {
+        nEdgesOnBoundary = boundaries[i].edgeEndIndex - boundaries[i].edgeStartIndex + 1;
+        if (boundaries[i].type<700 || boundaries[i].type>=800)   // NOT periodic nodes
+        {
+            lastNode = lastNode + uniqueNodesOnBounary[i];
+            lastFace = lastFace + nEdgesOnBoundary;
+        }
+        else
+        {
+            lastNode = lastNode + nEdgesOnBoundary;
+        }
+        boundaries[i].lastNode = lastNode - 1;
+        boundaries[i].lastFace = lastFace - 1;
+    }
 
     // Store data in Ugr object and write to file
     Ugr ugr;

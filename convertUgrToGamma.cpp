@@ -34,16 +34,14 @@ int main(int argc, char *argv[])
         trias[i].ref = 999;
     }
 
-    int edgeStart = 0;
     for (int i = 0; i < ugr.nBoundaries; i++)
     {
-        for (int j = edgeStart; j <= ugr.boundaries[i].lastFace; j++)
+        for (int j = ugr.boundaries[i].edgeStartIndex; j < ugr.boundaries[i].edgeEndIndex; j++)
         {
             edges[j].n[0] = ugr.edges[j].n[0] + 1;
             edges[j].n[1] = ugr.edges[j].n[1] + 1;
             edges[j].ref = ugr.boundaries[i].type;
         }
-        edgeStart = ugr.boundaries[i].lastFace+1;
     }
 
     // Store data in Gamma object and write to file
@@ -62,7 +60,7 @@ int main(int argc, char *argv[])
 
     gamma.writeMeshData(argv[2]);
 
-    // Write boundary data to FUN3D mapbc (it three input arguments)
+    // Write boundary data to FUN3D mapbc (if three input arguments)
     if (argc > 3)
     {
         FILE *fid;
