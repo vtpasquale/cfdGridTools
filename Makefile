@@ -25,6 +25,7 @@ all: ${OBJ}
 	${CXX} $(CXXFLAGS) -o scaleUgrid scaleUgrid.o Ugrid/Ugrid.o Ugrid/members/*.o
 	${CXX} $(CXXFLAGS) -o convertGridToVtk convertGridToVtk.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o Plt/Plt.o Plt/members/*.o Ugrid/Ugrid.o Ugrid/members/*.o Ugr/Ugr.o Ugr/members/*.o
 	${CXX} $(CXXFLAGS) -o readGammaSolution readGammaSolution.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
+	${CXX} $(CXXFLAGS) -o sortRenumberGammaEdges sortRenumberGammaEdges.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o Ugrid/Mapbc.o Ugrid/members/blazekReadline.o
 
 OBJ: ${SRCS}
 	${CPP} $(CXXFLAGS) -c $<
@@ -44,3 +45,4 @@ clean:
 	rm -rvf scaleUgrid
 	rm -rvf convertGridToVtk
 	rm -rvf readGammaSolution
+	rm -rvf sortRenumberGammaEdges
