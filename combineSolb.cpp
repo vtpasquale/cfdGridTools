@@ -56,15 +56,15 @@ int main(int argc, char *argv[])
 
     Gamma gamma1, gamma2, gammaOut;
     gamma1.getMeshInfo(argv[1]);
-    gamma1.getMeshData();
+    gamma1.getSolutionData();
 
     gamma2.getMeshInfo(argv[2]);
-    gamma2.getMeshData();
+    gamma2.getSolutionData();
 
     // Define solution data
-    gammaOut.NbrLin = 2*gamma1.NbrLin;
-    gammaOut.SolSiz = gamma1.SolSiz;
-    gammaOut.NbrTyp = gamma1.NbrTyp;
+    gammaOut.NbrLin = gamma1.NbrLin;
+    gammaOut.SolSiz = 2*gamma1.SolSiz;
+    gammaOut.NbrTyp = 2*gamma1.NbrTyp;
     if (gamma1.NbrLin != gamma2.NbrLin || gamma1.SolSiz != gamma2.SolSiz || gamma1.NbrTyp != gamma2.NbrTyp)
     {
         std::cout << "The two input solution files have inconsistent solution data.\n";
@@ -72,7 +72,8 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < gamma1.NbrTyp; i++)
     {
-        gammaOut.TypTab[i] = gamma1.TypTab[i];
+        gammaOut.TypTab[i              ] = gamma1.TypTab[i];
+        gammaOut.TypTab[i+gamma1.NbrTyp] = gamma2.TypTab[i];
         if (gamma1.TypTab[i] != gamma2.TypTab[i])
         {
             std::cout << "The two input solution files have inconsistent solution types.\n";
@@ -80,15 +81,21 @@ int main(int argc, char *argv[])
     }
 
     gammaOut.SolTab = new double[gammaOut.NbrLin * gammaOut.SolSiz];
-    int ns = gamma1.NbrLin*gamma1.SolSiz;
-    for (int i = 0; i < ns; i++)
+    int nl = gamma1.NbrLin;
+    int iss = gamma1.SolSiz;
+    int oss = gammaOut.SolSiz;
+    for (int i = 0; i < nl; i++)
     {
-        gammaOut.SolTab[i] = gamma1.SolTab[i];
+        for (int j=0; j < iss; j++)
+        {
+            gammaOut.SolTab[oss*i+j    ] = gamma1.SolTab[iss*i+j];
+            gammaOut.SolTab[oss*i+j+iss] = gamma2.SolTab[iss*i+j];
+        }
     }
-    for (int i = 0; i < ns; i++)
-    {
-        gammaOut.SolTab[i+ns] = gamma2.SolTab[i];
-    }
+
+    // header data
+    gammaOut.FilVer = 3;
+    gammaOut.dim = 2;
 
     // Write solution data to the file
     gammaOut.writeSolutionData(argv[3]);
