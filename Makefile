@@ -26,6 +26,7 @@ all: ${OBJ}
 	${CXX} $(CXXFLAGS) -o convertGridToVtk convertGridToVtk.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o Plt/Plt.o Plt/members/*.o Ugrid/Ugrid.o Ugrid/members/*.o Ugr/Ugr.o Ugr/members/*.o
 	${CXX} $(CXXFLAGS) -o readGammaSolution readGammaSolution.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
 	${CXX} $(CXXFLAGS) -o sortRenumberGammaEdges sortRenumberGammaEdges.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o Ugrid/Mapbc.o Ugrid/members/blazekReadline.o
+	${CXX} $(CXXFLAGS) -o combineSolb combineSolb.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o 
 
 OBJ: ${SRCS}
 	${CPP} $(CXXFLAGS) -c $<
@@ -46,3 +47,4 @@ clean:
 	rm -rvf convertGridToVtk
 	rm -rvf readGammaSolution
 	rm -rvf sortRenumberGammaEdges
+	rm -rvf combineSolb
