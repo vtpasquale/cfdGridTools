@@ -27,7 +27,8 @@ all: ${OBJ}
 	${CXX} $(CXXFLAGS) -o readGammaSolution readGammaSolution.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
 	${CXX} $(CXXFLAGS) -o sortRenumberGammaEdges sortRenumberGammaEdges.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o Ugrid/Mapbc.o Ugrid/members/blazekReadline.o
 	${CXX} $(CXXFLAGS) -o combineSolb combineSolb.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
-	${CXX} $(CXXFLAGS) -o combineSolb3D combineSolb3D.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o 
+	${CXX} $(CXXFLAGS) -o combineSolb3D combineSolb3D.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o
+	${CXX} $(CXXFLAGS) -o removeFirstSolb removeFirstSolb.o Gamma/Gamma.o Gamma/members/*.o Gamma/libMeshb/*.o 
 
 OBJ: ${SRCS}
 	${CPP} $(CXXFLAGS) -c $<
@@ -50,3 +51,4 @@ clean:
 	rm -rvf sortRenumberGammaEdges
 	rm -rvf combineSolb
 	rm -rvf combineSolb3D
+	rm -rvf removeFirstSolb
